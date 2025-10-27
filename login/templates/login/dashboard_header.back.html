@@ -1,0 +1,76 @@
+<header class="flex w-full px-8 py-4 justify-between items-center bg-base-200 ">
+    <div class="flex flex-row space-x-4">
+        <div class="drawer">
+            <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content">
+                <!-- Page content here -->
+                <label for="my-drawer" class="btn btn- drawer-button">Open drawer</label>
+            </div>
+            <div class="drawer-side">
+                <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+                <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                    <!-- Sidebar content here -->
+                    <li>
+                        <a>Sidebar Item 1</a>
+                    </li>
+                    <li>
+                        <a>Sidebar Item 2</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a href="{% url 'home' %}">
+            <h1 class="text-3xl font-bold text-primary text-white">MIT</h1>
+        </a>
+    </div>
+    <nav>
+        <ul class="menu space-x-2 menu-horizontal rounded-box">
+            {% if user.username == "admin" %}
+                <li>
+                    <div class="dropdown dropdown-hover p-0">
+                        <div tabindex="0" role="button" class="btn m-btn btn-neutral">Administration</div>
+                        <ul tabindex="0"
+                            class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                            <li>
+                                <a href="{% url 'user_list' %}">User</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'user_log' %}">Log</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'activity_list' %}">Activity</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            {% endif %}
+            <li>
+                <div class="dropdown flex flex-col p-0">
+                    <div tabindex="0" role="button" class="btn btn-neutral">Profil</div>
+                    <div tabindex="0"
+                         class="dropdown-content card card-sm bg-base-100 z-1 w-64 shadow-md">
+                        <div class="card-body flex justify-center items-center flex-col">
+                            <div class="avatar avatar-online">
+                                <div class="w-24 rounded-full">
+                                    <img src="{{ user.image.url }}" alt="Avatar du {{ user.username }}">
+                                </img>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <h2 class="text-3xl font-bold text-primary text-center text-white">{{ user.username }}</h2>
+                            <div class="flex flex-col items-center gap-2">
+                                <p class="badge ">{{ user.email }}</p>
+                                <!-- <p class="badge ">{{ user.is_active|yesno:"Activer,Désactiver" }}</p> -->
+                            </div>
+                            <a href="{% url 'user_modify' %}" class="btn btn-primary btn-sm w-full">Modify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+        </li>
+    </ul>
+</nav>
+</header>

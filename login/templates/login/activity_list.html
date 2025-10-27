@@ -1,0 +1,25 @@
+{% extends "login/dashboard_base.html" %}
+{% block content %}
+    <div class="w-full bg-base-200 min-h-screen">
+        <ul class="list bg-base-100 rounded-box shadow-md">
+            <div class="flex flex-row justify-between">
+                <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Activity list</li>
+                <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">
+                    <a href="{% url 'create_activity' %}" class="btn btn-primary">Add</a>
+                </li>
+            </div>
+            {% for w in list %}
+                <li class="list-row">
+                    <div>
+                        <img class="size-10 rounded-box" src="{{ w.image.url }}" />
+                    </div>
+                    <div class="list-col-grow">
+                        <div>{{ w.title }}</div>
+                        <div class="text-xs uppercase font-semibold opacity-60">{{ w.created_at }}</div>
+                    </div>
+                    <a href="{% url 'activity_delete' w.id %}" class="btn btn-error">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "login/dashboard_base.html" %}
+
+{% block content %}
+
+<div class="w-full bg-base-200 min-h-screen">
+
+    <ul class="list bg-base-100 rounded-box shadow-md">
+      <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">List of the user.</li>
+      {% for w in list %}
+        <li class="list-row">
+          <div><img class="size-10 rounded-box" src="{{ w.image.url }}"/></div>
+          <div class="list-col-grow">
+            <div>{{ w.username }}</div>
+            <div class="text-xs uppercase font-semibold opacity-60">{{ w.email }}</div>
+          </div>
+          <form method="POST" action="{% url 'user_active' w.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-sm">
+              {{ w.is_active|yesno:"Disable,Acitve" }}
+            </button>
+          </form>
+          <a href="{% url 'user_delete' w.id %}" class="btn btn-error">Delete</a>
+        </li>
+      {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

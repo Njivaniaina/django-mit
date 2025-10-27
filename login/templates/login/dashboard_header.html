@@ -1,0 +1,136 @@
+<div class="navbar bg-base-200 shadow-sm">
+    <div class="navbar-start">
+        <div class="dropdown">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                </svg>
+            </div>
+            <ul tabindex="0"
+                class="menu menu-sm dropdown-content rounded-box z-1 mt-3 w-52 p-2 shadow">
+                <li>
+                    <ul class="menu bg-base-200 rounded-box w-56">
+                        <li>
+                            <a href="{% url 'dashboard' %}">Home</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'activity_list_all' %}">Activity</a>
+                        </li>
+                        <li>
+                            {% if user.username == "admin" %}
+                                <li>
+                                    <details open>
+                                        <summary>Administration</summary>
+                                        <ul>
+                                            <li>
+                                                <a href="{% url 'user_list' %}">User</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'user_log' %}">Log</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'activity_list' %}">Activity</a>
+                                            </li>
+                                        </details>
+                                    </li>
+                                {% endif %}
+                            </li>
+                            <li>
+                                <div class="dropdown">
+                                    <div tabindex="0" role="button" class="">
+                                        Theme
+                                        <svg width="12px"
+                                             height="12px"
+                                             class="inline-block h-2 w-2 fill-current opacity-60"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 2048 2048">
+                                            <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+                                        </svg>
+                                    </div>
+                                    <ul tabindex="0"
+                                        class="dropdown-content bg-base-300 rounded-box z-1 w-52 p-2 shadow-2xl">
+                                        <li>
+                                            <input type="radio"
+                                                   name="theme-dropdown"
+                                                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                                                   aria-label="Default"
+                                                   value="default" />
+                                        </li>
+                                        <li>
+                                            <input type="radio"
+                                                   name="theme-dropdown"
+                                                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                                                   aria-label="Retro"
+                                                   value="retro" />
+                                        </li>
+                                        <li>
+                                            <input type="radio"
+                                                   name="theme-dropdown"
+                                                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                                                   aria-label="Cyberpunk"
+                                                   value="cyberpunk" />
+                                        </li>
+                                        <li>
+                                            <input type="radio"
+                                                   name="theme-dropdown"
+                                                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                                                   aria-label="Valentine"
+                                                   value="valentine" />
+                                        </li>
+                                        <li>
+                                            <input type="radio"
+                                                   name="theme-dropdown"
+                                                   class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+                                                   aria-label="Aqua"
+                                                   value="aqua" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <a class="btn btn-ghost text-xl">MIT</a>
+        </div>
+        <div class="navbar-end space-x-2">
+            <div class="dropdown dropdown-end flex flex-col p-0">
+                <div tabindex="0" role="button" class="btn m-1">
+                    Profil
+                    <svg width="12px"
+                         height="12px"
+                         class="inline-block h-2 w-2 fill-current opacity-60"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 2048 2048">
+                        <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+                    </svg>
+                </div>
+                <div tabindex="0"
+                     class="dropdown-content card card-sm bg-base-300 z-1 w-64 shadow-md">
+                    <div class="card-body flex justify-center items-center flex-col">
+                        <div class="avatar avatar-online">
+                            <div class="w-24 rounded-full">
+                                <img src="{{ user.image.url }}" alt="Avatar du {{ user.username }}">
+                            </img>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-3xl font-bold text-primary text-center text-white">{{ user.username }}</h2>
+                        <div class="flex flex-col items-center gap-2">
+                            <p class="badge ">{{ user.email }}</p>
+                            <!-- <p class="badge ">{{ user.is_active|yesno:"Activer,Désactiver" }}</p> -->
+                        </div>
+                        <a href="{% url 'user_modify' %}" class="btn btn-primary btn-sm w-full">Modify</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+    </div>
+</div>

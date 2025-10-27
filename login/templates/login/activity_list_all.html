@@ -1,0 +1,40 @@
+{% extends "login/dashboard_base.html" %}
+{% block content %}
+    <div class="m-5 flex items-center justify-center flex-col w-full min-h-[80vh]">
+        <h1 class="text-6xl font-bold mb-8">Here is the all of activity</h1>
+        {% for activity in activities %}
+            <div class="card bg-base-100 w-96 shadow-sm">
+                {% if activity.image %}
+                    <figure>
+                        <img src="{{ activity.image.url }}" alt="{{ activity.title }}">
+                    </figure>
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">
+                        {{ activity.title }}
+                        <!-- <div class="badge badge-secondary">NEW</div> -->
+                    </h2>
+                    <p id="desc-{{ activity.id }}" class="line-clamp-2">{{ activity.description }}</p>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-sm btn-outline btn-primary"
+                                onclick="toggleText({{ activity.id }})">Show more</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <script>
+function toggleText(id) {
+  const text = document.getElementById("desc-" + id);
+  const btn = event.target;
+
+  if (text.classList.contains("line-clamp-2")) {
+    text.classList.remove("line-clamp-2");
+    btn.textContent = "Show less";
+  } else {
+    text.classList.add("line-clamp-2");
+    btn.textContent = "Show more";
+  }
+}
+        </script>
+    </div>
+{% endblock %}

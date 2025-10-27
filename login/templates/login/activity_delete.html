@@ -1,0 +1,9 @@
+{% extends "login/dashboard_base.html" %}
+{% block content %}
+    <form method="POST" class="space-y-4 flex flex-col">
+        <span class="text-center">Are you sure to delete the activity : <strong>{{ activity.title }}</strong></span>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-error w-full">Delete</button>
+        <a href="{% url 'activity_list' %} " class="btn btn-primary w-full">Cancel</a>
+    </form>
+{% endblock %}

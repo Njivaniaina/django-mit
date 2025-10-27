@@ -1,0 +1,71 @@
+{% extends 'login/dashboard_base.html' %}
+{% block content %}
+    <div class="hero bg-base-100 min-h-[80vh]">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <h1 class="text-5xl font-bold">Hello {{ user.username }} !</h1>
+                <p class="py-6">Here, you can view our activity, your profil.</p>
+                <button class="btn btn-primary">Start</button>
+            </div>
+        </div>
+    </div>
+    <!-- Activity -->
+    <div class="m-5 flex items-center justify-center flex-col w-full min-h-[80vh]">
+        <h1 class="text-6xl font-bold mb-8">Our Activity</h1>
+        {% for activity in activities %}
+            <div class="card bg-base-100 w-96 shadow-sm">
+                {% if activity.image %}
+                    <figure>
+                        <img src="{{ activity.image.url }}" alt="{{ activity.title }}">
+                    </figure>
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">
+                        {{ activity.title }}
+                        <div class="badge badge-secondary">NEW</div>
+                    </h2>
+                    <p id="desc-{{ activity.id }}" class="line-clamp-2">{{ activity.description }}</p>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-sm btn-outline btn-primary"
+                                onclick="toggleText({{ activity.id }})">Show more</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <script>
+function toggleText(id) {
+  const text = document.getElementById("desc-" + id);
+  const btn = event.target;
+
+  if (text.classList.contains("line-clamp-2")) {
+    text.classList.remove("line-clamp-2");
+    btn.textContent = "Show less";
+  } else {
+    text.classList.add("line-clamp-2");
+    btn.textContent = "Show more";
+  }
+}
+        </script>
+    </div>
+    <!-- Statistic -->
+    <div class="m-5 flex items-center justify-center flex-col w-full min-h-[80vh]">
+        <h1 class="text-6xl font-bold mb-8">Statistic</h1>
+        <div class="stats shadow">
+            <div class="stat place-items-center">
+                <div class="stat-title">Users</div>
+                <div class="stat-value">{{ total_count }}</div>
+                <div class="stat-desc">From January 1st to February 1st</div>
+            </div>
+            <div class="stat place-items-center">
+                <div class="stat-title">Active</div>
+                <div class="stat-value text-secondary">{{ active_count }}</div>
+                <div class="stat-desc text-secondary">Valide by the Admin</div>
+            </div>
+            <div class="stat place-items-center">
+                <div class="stat-title">Inactive</div>
+                <div class="stat-value">{{ inactive_count }}</div>
+                <div class="stat-desc">Waiting ...</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

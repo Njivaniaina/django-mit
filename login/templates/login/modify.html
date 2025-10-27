@@ -1,0 +1,153 @@
+{% extends 'login/dashboard_base.html' %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-base-200 p-6 rounded-2xl shadow-lg space-y-6">
+  <h1 class="text-3xl font-bold text-center text-primary">⚙️ Profil utilisateur</h1>
+
+  {% if message_error %}
+  <div role="alert" class="alert alert-error">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>{{ message_error }}</span>
+  </div>
+  {% endif %}
+
+  {% if message %}
+  <div role="alert" class="alert alert-success">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+    <span>{{ message }}</span>
+  </div>  
+  {% endif %}
+
+  <!-- 🔹 Partie 1 : Modification informations personnelles -->
+  <div class="bg-base-100 p-4 rounded-xl shadow space-y-4">
+    <h2 class="text-xl font-semibold text-primary">📌 Modifier mes informations</h2>
+
+    <form method="post" enctype="multipart/form-data" id="form1" class="space-y-3">
+      {% csrf_token %}
+      <input type="hidden" name="form_type" value="update_info">
+
+      <!-- Username -->
+      <div>
+        <label class="label">Nom d’utilisateur</label>
+        {{ form.username }}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="label">Email</label>
+        {{ form.email }}
+      </div>
+
+      <div>
+        <label class="label">Password</label>
+          {{ form.password1 }}
+      </div>
+
+      <!-- Champ caché Password2 -->
+      <input type="hidden" name="password2" id="password2_hidden">
+
+      <!-- Choix Upload ou Scan -->
+      <div class="tabs">
+        <a class="tab tab-bordered tab-active" onclick="switchTab('upload')">Upload</a>
+        <a class="tab tab-bordered" onclick="switchTab('scan')">Scan</a>
+      </div>
+
+      <!-- Upload -->
+      <div id="upload-tab">
+        {{ form.image_upload }}
+      </div>
+
+      <!-- Scan -->
+      <div id="scan-tab" class="hidden space-y-2">
+        <video id="camera" autoplay class="rounded-lg"></video>
+        <button type="button" class="btn btn-primary" onclick="captureImage()">📸 Capturer</button>
+        <input type="hidden" name="image_scan" id="image_scan">
+        <canvas id="canvas" class="hidden"></canvas>
+      </div>
+
+      <button type="submit" class="btn btn-success w-full">💾 Sauvegarder les infos</button>
+    </form>
+  </div>
+
+  <!-- 🔹 Partie 2 : Modification mot de passe -->
+  <div class="bg-base-100 p-4 rounded-xl shadow space-y-4">
+    <h2 class="text-xl font-semibold text-primary">🔑 Changer mon mot de passe</h2>
+
+    <form method="post" class="space-y-3">
+      {% csrf_token %}
+      <input type="hidden" name="form_type" value="change_password">
+
+      <!-- Password actuel -->
+      <div>
+        <label class="label">Mot de passe actuel</label>
+        <input type="password" name="current_password" class="input input-bordered w-full" required>
+      </div>
+
+      <!-- Nouveau password -->
+      <div>
+        <label class="label">Nouveau mot de passe</label>
+        <input type="password" name="new_password1" class="input input-bordered w-full" required>
+      </div>
+
+      <!-- Confirmation -->
+      <div>
+        <label class="label">Confirmer le nouveau mot de passe</label>
+        <input type="password" name="new_password2" class="input input-bordered w-full" required>
+      </div>
+
+      <button type="submit" class="btn btn-warning w-full">🔄 Mettre à jour le mot de passe</button>
+    </form>
+  </div>
+</div>
+
+
+<script>
+  function switchTab(tab) {
+    document.getElementById("upload-tab").classList.toggle("hidden", tab !== "upload");
+    document.getElementById("scan-tab").classList.toggle("hidden", tab !== "scan");
+  }
+
+  const form = document.getElementById('form1');
+  form.addEventListener('submit', function() {
+    // Copier password1 dans password2
+    // JS va selectionner le premier input password1
+    const pw1 = document.querySelector('input[name="password1"]').value;
+    // const pw1 = document.getElementById('password_first"]').value;
+    document.getElementById('password2_hidden').value = pw1;
+  });
+
+
+  let stream = null;
+
+  navigator.mediaDevices.getUserMedia({video: true})
+    .then(s => {
+      stream = s;
+      document.getElementById("camera").srcObject = s;
+    })
+    .catch(err => console.error("Erreur caméra:", err));
+
+  function captureImage() {
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    document.getElementById("image_scan").value = canvas.toDataURL("image/png");
+
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+</script>
+
+{% endblock %}
+

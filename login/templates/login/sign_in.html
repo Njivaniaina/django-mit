@@ -1,0 +1,115 @@
+{% extends "login/base.html" %}
+
+{% block content %}
+
+<div class="flex justify-center mt-32">
+<div class="flex flex-col w-3xl rounded-8 p-6">
+<div class="w-full h-fit flex items-center justify-center">
+
+
+<div class="w-sm bg-base-200 p-6 pb-6 space-y-3 rounded-2xl">
+  <h1 class="text-3xl font-bold m-4 mt-2 text-center text-white text-primary">Sign in</h1>
+
+{% if message %}
+  <div role="alert" class="alert alert-error">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>{{message}} </span>
+  </div>
+  {% endif %}
+
+
+
+<form method="post" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+
+    <!-- Username -->
+    <div>
+        {{ form.username }}
+    </div>
+
+    <!-- Email -->
+    <div>
+        {{ form.email }}
+    </div>
+
+    <!-- Password -->
+    <div>
+        {{ form.password1 }}
+    </div>
+
+    <!-- Confirm Password -->
+    <div>
+        {{ form.password2 }}
+    </div>
+
+    <!-- Choix Upload ou Scan -->
+    <div class="tabs">
+        <a class="tab tab-bordered tab-active" onclick="switchTab('upload')">Upload</a>
+        <a class="tab tab-bordered" onclick="switchTab('scan')">Scan</a>
+    </div>
+
+    <!-- Upload -->
+    <div id="upload-tab">
+        {{ form.image_upload }}
+    </div>
+
+    <!-- Scan -->
+    <div id="scan-tab" class="hidden">
+        <video id="camera" autoplay class="rounded-lg"></video>
+        <button type="button" class="btn btn-primary mt-2" onclick="captureImage()">Capturer</button>
+        <input type="hidden" name="image_scan" id="image_scan">
+        <canvas id="canvas" class="hidden"></canvas>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-full">Register</button>
+</form>
+
+<script>
+function switchTab(tab) {
+    document.getElementById("upload-tab").classList.toggle("hidden", tab !== "upload");
+    document.getElementById("scan-tab").classList.toggle("hidden", tab !== "scan");
+}
+
+ let stream = null;
+
+  navigator.mediaDevices.getUserMedia({video: true})
+    .then(s => {
+      stream = s;
+      document.getElementById("camera").srcObject = s;
+    })
+    .catch(err => console.error("Erreur caméra:", err));
+
+  function captureImage() {
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Dessiner l’image
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convertir en Base64 et l’envoyer dans le champ hidden
+    document.getElementById("image_scan").value = canvas.toDataURL("image/png");
+
+    // Arrêter la caméra
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+
+  }
+</script>
+
+    
+<p class="text-center">Have an account? <a class="btn btn-link" href="{% url 'login' %}">Login</a></p>
+
+</div>
+
+</div>
+</div>
+</div>
+
+{% endblock %}
