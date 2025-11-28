@@ -77,7 +77,6 @@ def sign_in_views(request):
                     message = "❌ Aucun visage détecté sur l'image."
                     return render(request, "login/sign_in.html", {"form": form, 'message': message})
 
-            
             user.save()
             messages.success(request, "✅ Inscription réussie !")
             return redirect("login")
